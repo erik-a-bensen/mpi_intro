@@ -1,9 +1,0 @@
-hydra2.stat.cmu.edu
-hydra3.stat.cmu.edu
-hydra4.stat.cmu.edu
-hydra6.stat.cmu.edu
-hydra7.stat.cmu.edu
-hydra8.stat.cmu.edu
-hydra11.stat.cmu.edu
-hydra12.stat.cmu.edu
-hydra13.stat.cmu.edu
