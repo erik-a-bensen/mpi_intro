@@ -10,7 +10,7 @@ size = comm.Get_size()
 def run_particle_filter():
     # Set parameters
     T = 100  # Time steps
-    N = 500  # Total number of particles
+    N = 1000  # Total number of particles
     process_variance = 3  # Process variance
     observation_variance = 3.0  # Observation noise variance
     
