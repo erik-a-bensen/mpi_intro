@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import os 
 
 def main():
-    files = os.listdir(".")
+    files = os.listdir("./timing_results")
     files = [f for f in files if f.startswith("timing_") and f.endswith(".npy")]
     
     # Sort files by number of processes
@@ -13,7 +13,7 @@ def main():
     processes = np.array([pair[1] for pair in file_process_pairs])
     
     # Load timing data
-    timing_data = [np.load(f) for f in files]
+    timing_data = [np.load(os.path.join('timing_results', f)) for f in files]
     mean_times = np.array([np.mean(data) for data in timing_data])
     std_times = np.array([np.std(data) for data in timing_data])
     
