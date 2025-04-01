@@ -9,7 +9,7 @@ size = comm.Get_size()
 
 def main():
     start = MPI.Wtime()
-    run_particle_filter()
+    run_particle_filter(N=100000)
     end = MPI.Wtime()
     elapsed_time = end - start
 

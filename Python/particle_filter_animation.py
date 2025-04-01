@@ -7,13 +7,11 @@ comm = MPI.COMM_WORLD
 rank = comm.Get_rank()
 size = comm.Get_size()
 
-def run_particle_filter():
-    # Set parameters
-    T = 100  # Time steps
-    N = 100000  # Total number of particles
-    process_variance = 3  # Process variance
-    observation_variance = 3.0  # Observation noise variance
-    
+def run_particle_filter(T=100, # Number of time steps
+                        N=500, # Number of particles
+                        process_variance=3, # Process variance
+                        observation_variance=3.0, # Observation noise variance
+                    ):
     # Calculate particles per process
     n_local = N // size
     # Store the number of particles on each process for gatherv operations
