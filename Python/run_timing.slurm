@@ -10,5 +10,5 @@ cd /jet/home/ebensen/repos/mpi_intro/Python
 
 for nprocs in 1 2 4 8 16 32 64 128 256
 do
-    mpiexec -n $nprocs python timing.py
+    /jet/home/ebensen/.conda/envs/mpi/bin/mpiexec -n $nprocs /jet/home/ebensen/.conda/envs/mpi/bin/python timing.py
 done

@@ -14,9 +14,10 @@ def main():
     elapsed_time = end - start
 
     times = np.zeros(size)
-    comm.Gather(elapsed_time, times, root=0)
+    times = comm.gather(elapsed_time, root=0)
     if rank == 0:
-        os.mkdir("timing_results", exist_ok=True)
+        if not os.path.exists("timing_results"):
+            os.mkdir("timing_results")
         np.save(f"timing_results/timing_{size}_processes.npy", times)
 
 if __name__ == "__main__":

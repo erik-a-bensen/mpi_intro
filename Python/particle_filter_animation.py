@@ -10,12 +10,12 @@ size = comm.Get_size()
 def run_particle_filter():
     # Set parameters
     T = 100  # Time steps
-    N = 1000  # Total number of particles
+    N = 100000  # Total number of particles
     process_variance = 3  # Process variance
     observation_variance = 3.0  # Observation noise variance
     
     # Calculate particles per process
-    n_local = N // size + (N % size > rank)
+    n_local = N // size
     # Store the number of particles on each process for gatherv operations
     local_counts = comm.allgather([n_local])
     
