@@ -3,11 +3,6 @@ __pycache__/
 *.py[cod]
 *$py.class
 *.out 
-*.slurm
-*.npy
-
-*.mp4 
-*.png
 
 # C extensions
 *.so
