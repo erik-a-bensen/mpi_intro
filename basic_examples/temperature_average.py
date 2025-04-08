@@ -6,7 +6,7 @@ comm = MPI.COMM_WORLD
 rank = comm.Get_rank()
 size = comm.Get_size()
 
-# Number of data points per process (for a more realistic example)
+# Number of data points per process
 points_per_process = 5_000_000
 total_points = size * points_per_process
 

@@ -10,7 +10,7 @@ def risky_function(rank, n_iters):
         time.sleep(1)
         print(f"Running risky function iteration {i} on process {rank}.")
         if rank == 0 and i == 1:
-            raise ValueError("Process 0 encountered an error.")
+            raise ValueError("Risky function failed catastrophyically!!!!!")
 
 def main():
     n_iters = 3
