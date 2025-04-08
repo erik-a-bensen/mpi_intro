@@ -7,8 +7,13 @@ rank = comm.Get_rank()
 size = comm.Get_size()
 
 # Number of data points per process (for a more realistic example)
-points_per_process = 5
+points_per_process = 5_000_000
 total_points = size * points_per_process
+
+def generate_temps():
+    # Generate temperature data (in Fahrenheit) for all processes
+    np.random.seed(12)
+    return np.random.uniform(32, 100, total_points).astype(np.float64)
 
 # 1. Send/Recv Version
 def run_send_recv():
@@ -17,9 +22,7 @@ def run_send_recv():
     # Generate sample data on root process
     if rank == 0:
         # Create temperature data (multiple points per process)
-        all_temps = np.array([15 + 0.5*i for i in range(total_points)], dtype=np.float64)
-        print(f"Original data shape: {all_temps.shape}")
-        print(f"First few values: {all_temps[:5]}")
+        all_temps = generate_temps()
         
         # Send each process its chunk of data
         for dest in range(1, size):
@@ -35,7 +38,7 @@ def run_send_recv():
         local_chunk = comm.recv(source=0)
     
     # Everyone processes their local data
-    local_result = np.mean(local_chunk) + 0.1 * rank  # Simple processing
+    local_result = np.mean(local_chunk)
     
     # Process 0 will collect all processed values and compute average
     if rank == 0:
@@ -63,7 +66,7 @@ def run_scatter_gather():
     # Generate sample data on root process
     if rank == 0:
         # Create temperature data (multiple points per process)
-        all_temps = np.array([15 + 0.5*i for i in range(total_points)], dtype=np.float64)
+        all_temps = generate_temps()
         # Reshape into chunks for each process
         data_chunks = all_temps.reshape(size, points_per_process)
     else:
@@ -73,7 +76,7 @@ def run_scatter_gather():
     local_chunk = comm.scatter(data_chunks, root=0)
     
     # Everyone processes their local data
-    local_result = np.mean(local_chunk) + 0.1 * rank  # Simple processing
+    local_result = np.mean(local_chunk)
     
     # Gather all processed results back to root
     processed_results = comm.gather(local_result, root=0)
@@ -92,7 +95,7 @@ def run_bcast_gather():
     # Generate sample data on root process
     if rank == 0:
         # Create temperature data (multiple points per process)
-        all_temps = np.array([15 + 0.5*i for i in range(total_points)], dtype=np.float64)
+        all_temps = generate_temps()
     else:
         all_temps = np.empty(total_points, dtype=np.float64)
     
@@ -105,7 +108,7 @@ def run_bcast_gather():
     local_chunk = all_temps[start_idx:end_idx]
     
     # Process the local chunk
-    local_result = np.mean(local_chunk) + 0.1 * rank  # Simple processing
+    local_result = np.mean(local_chunk)
     
     # Gather all processed results back to root
     processed_results = comm.gather(local_result, root=0)
@@ -124,7 +127,7 @@ def run_scatter_reduce():
     # Generate sample data on root process
     if rank == 0:
         # Create temperature data (multiple points per process)
-        all_temps = np.array([15 + 0.5*i for i in range(total_points)], dtype=np.float64)
+        all_temps = generate_temps()
         # Reshape into chunks for each process
         data_chunks = all_temps.reshape(size, points_per_process)
     else:
@@ -134,7 +137,7 @@ def run_scatter_reduce():
     local_chunk = comm.scatter(data_chunks, root=0)
     
     # Everyone processes their local data
-    local_result = np.mean(local_chunk) + 0.1 * rank  # Simple processing
+    local_result = np.mean(local_chunk)
     
     # Calculate sum of all results using reduce
     total_result = comm.reduce(local_result, op=MPI.SUM, root=0)
@@ -145,3 +148,9 @@ def run_scatter_reduce():
         print(f"Scatter/Reduce version:")
         print(f"  Final average: {final_avg:.4f}")
         print(f"  Time: {time.time() - start_time:.6f} seconds")
+
+if __name__ == "__main__":
+    run_send_recv()
+    run_scatter_gather()
+    run_bcast_gather()
+    run_scatter_reduce()

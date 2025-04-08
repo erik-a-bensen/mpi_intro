@@ -42,6 +42,7 @@ def main():
             # Bound between 0 and 1
             f = max(0, min(1, 1-f))
             parallel_fraction.append(f)
+    serial_fraction = 1 - np.array(parallel_fraction)
     
     # Create figure with multiple subplots
     fig, axs = plt.subplots(2, 2, figsize=(12, 10))
@@ -50,7 +51,7 @@ def main():
     axs[0, 0].errorbar(processes, mean_times, yerr=std_times, fmt='o-')
     axs[0, 0].set_xlabel("Number of Processes")
     axs[0, 0].set_ylabel("Time (s)")
-    axs[0, 0].set_title("Wall Time vs Processes")
+    axs[0, 0].set_title("Wall Time")
     axs[0, 0].set_xscale("log")
     axs[0, 0].set_yscale("log")
     # Add ideal scaling line
@@ -64,7 +65,7 @@ def main():
     axs[0, 1].plot(processes, processes, 'k--', label='Ideal Speedup')  # Ideal speedup line
     axs[0, 1].set_xlabel("Number of Processes")
     axs[0, 1].set_ylabel("Speedup")
-    axs[0, 1].set_title("Speedup vs Processes")
+    axs[0, 1].set_title("Parallel Speedup")
     axs[0, 1].legend()
     axs[0, 1].grid(True)
     
@@ -73,18 +74,18 @@ def main():
     axs[1, 0].axhline(y=1.0, color='k', linestyle='--', label='Ideal Efficiency')
     axs[1, 0].set_xlabel("Number of Processes")
     axs[1, 0].set_ylabel("Efficiency")
-    axs[1, 0].set_title("Efficiency vs Processes")
+    axs[1, 0].set_title("Parallel Efficiency")
     axs[1, 0].set_ylim(0, 1.1)
     axs[1, 0].legend()
     axs[1, 0].grid(True)
     
     # Plot 4: Estimated Parallel Fraction vs Processes
-    axs[1, 1].plot(processes, parallel_fraction, 'o-')
-    axs[1, 1].axhline(y=1.0, color='k', linestyle='--', label='Fully Parallel')
+    axs[1, 1].plot(processes, serial_fraction, 'o-')
+    axs[1, 1].axhline(y=0.0, color='k', linestyle='--', label='Fully Parallel')
     axs[1, 1].set_xlabel("Number of Processes")
-    axs[1, 1].set_ylabel("Parallel Fraction")
-    axs[1, 1].set_title("Estimated Parallel Fraction")
-    axs[1, 1].set_ylim(0, 1.1)
+    axs[1, 1].set_ylabel("Serial Fraction")
+    axs[1, 1].set_title("Karp-Flatt Metric (Serial Fraction)")
+    # axs[1, 1].set_ylim(0, 1.1)
     axs[1, 1].legend()
     axs[1, 1].grid(True)
     

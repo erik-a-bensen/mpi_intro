@@ -4,15 +4,12 @@
 #SBATCH -n 256
 #SBATCH -N 2
 #SBATCH --ntasks-per-node=128
-#SBATCH -t 2:00:00
+#SBATCH -t 0:05:00
 
 module purge
 module load anaconda3/2022.10
 conda activate mpi
 
-cd /jet/home/ebensen/repos/mpi_intro/particle_filter_example
+cd ~/repos/mpi_intro/basic_examples
 
-for nprocs in 1 2 4 8 16 32 64 128 256
-do
-    mpiexec -n $nprocs python timing.py
-done
+mpiexec -n 256 python hello_world.py

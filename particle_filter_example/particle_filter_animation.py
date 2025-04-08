@@ -14,20 +14,18 @@ def run_particle_filter(T=100, # Number of time steps
                     ):
     # Calculate particles per process
     n_local = N // size
-    # Store the number of particles on each process for gatherv operations
-    local_counts = comm.allgather([n_local])
     
     # === DATA PREPARATION (MPI) ===
     # Generate data (only on rank 0)
-    x_true, observations, observation = None, None, None
+    x_true, observations, current_obs = None, None, None
     if rank == 0:
         x_true, observations = generate_data(T, observation_variance)
-        observation = observations[0]
-    # Initialize single observation variable
-    observation = comm.bcast(observation, root=0)
+        current_obs = observations[0]
+    # Initialize single current_obs variable
+    current_obs = comm.bcast(current_obs, root=0)
     
     # Initialize particles on each process
-    local_particles = initialize_particles(observation, n_local)
+    local_particles = initialize_particles(current_obs, n_local)
     
     # Initialize result arrays (only on rank 0)
     if rank == 0:
@@ -38,12 +36,12 @@ def run_particle_filter(T=100, # Number of time steps
     for t in range(1, T):
         # If main process, get observation 
         if rank == 0:
-            observation = get_measurement(observations, t)
+            current_obs = get_measurement(observations, t)
         # Broadcast the observation to all processes
-        observation = comm.bcast(observation, root=0)
+        current_obs = comm.bcast(current_obs, root=0)
         
         # Update particles based on the previous state and process noise
-        local_particles, local_weights = update_particles(local_particles, process_variance, observation, observation_variance)
+        local_particles, local_weights = update_particles(local_particles, process_variance, current_obs, observation_variance)
         
         # === MPI ===
         # Calculate sum of weights across all processes

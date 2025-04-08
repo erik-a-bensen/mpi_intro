@@ -6,9 +6,6 @@ comm = MPI.COMM_WORLD
 rank = comm.Get_rank()
 size = comm.Get_size()
 
-# Previous implementations would go here...
-
-# 5. Scatterv example - converting Fahrenheit to Celsius with uneven data distribution
 def run_scatterv_example():
     start_time = time.time()
     
@@ -72,13 +69,5 @@ def run_scatterv_example():
         print(f"  Maximum difference from direct calculation: {max_diff:.10f}")
         print(f"  Time: {time.time() - start_time:.6f} seconds")
 
-# Run all versions
-if rank == 0:
-    print(f"Running with {size} processes")
-    print("-" * 50)
-
-# Wait for all processes to reach this point
-comm.Barrier()
-
-# Run the temperature conversion example
-run_scatterv_example()
+if __name__ == "__main__":
+    run_scatterv_example()
